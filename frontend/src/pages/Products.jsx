@@ -19,7 +19,7 @@ const Products = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await getUserProducts(currentUser.uid);
+        const data = await getUserProducts();
         setProducts(data);
         setFilteredProducts(data);
       } catch (error) {

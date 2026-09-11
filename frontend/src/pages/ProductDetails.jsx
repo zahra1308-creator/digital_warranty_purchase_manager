@@ -34,7 +34,7 @@ const ProductDetails = () => {
     if (window.confirm("Are you sure you want to delete this product? This action cannot be undone.")) {
       setIsDeleting(true);
       try {
-        await deleteProduct(id, product.billURL);
+        await deleteProduct(id);
         toast.success("Product deleted successfully");
         navigate('/products');
       } catch (error) {

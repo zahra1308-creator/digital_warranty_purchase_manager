@@ -7,10 +7,15 @@ const Profile = () => {
   const { currentUser } = useAuth();
   const [name, setName] = useState(currentUser?.name || '');
   const [newPassword, setNewPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleUpdateProfile = (e) => {
     e.preventDefault();
-    toast.info("Profile updating is not supported in this week's implementation.");
+    setLoading(true);
+    setTimeout(() => {
+      toast.info("Profile updating is not supported in this implementation.");
+      setLoading(false);
+    }, 400);
   };
 
   return (

@@ -1,6 +1,6 @@
 import apiCall from './api';
 
-export const addProduct = async (productData, file, userId) => {
+export const addProduct = async (productData, file) => {
   const formData = new FormData();
   for (const key in productData) {
     if (productData[key] !== null && productData[key] !== undefined) {
@@ -17,10 +17,12 @@ export const addProduct = async (productData, file, userId) => {
   });
 };
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+
 const transformToCamelCase = (dbObj) => {
   let billURL = dbObj.bill_path;
   if (billURL && billURL.startsWith('/api')) {
-    billURL = `http://localhost:5000${billURL}`;
+    billURL = `${BACKEND_URL}${billURL}`;
   }
 
   return {
@@ -40,8 +42,8 @@ const transformToCamelCase = (dbObj) => {
   };
 };
 
-export const getUserProducts = async (userId) => {
-  // We don't need to pass userId as the backend infers it from the session.
+export const getUserProducts = async () => {
+  // The backend infers the user from the session.
   const data = await apiCall('/products', {
     method: 'GET',
   });
@@ -72,8 +74,7 @@ export const updateProduct = async (productId, updateData, newFile) => {
   });
 };
 
-export const deleteProduct = async (productId, billURL) => {
-  // Bill deletion is out of scope for Week 3/4.
+export const deleteProduct = async (productId) => {
   return await apiCall(`/products/${productId}`, {
     method: 'DELETE',
   });

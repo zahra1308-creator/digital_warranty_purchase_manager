@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { addProduct } from '../services/productService';
-import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import { FiUpload, FiPackage, FiCalendar, FiDollarSign, FiInfo } from 'react-icons/fi';
 
 const AddProduct = () => {
-  const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   
@@ -40,7 +38,7 @@ const AddProduct = () => {
     setLoading(true);
     
     try {
-      await addProduct(formData, file, currentUser.uid);
+      await addProduct(formData, file);
       toast.success('Product added successfully!');
       navigate('/dashboard');
     } catch (error) {

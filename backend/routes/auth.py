@@ -1,4 +1,5 @@
 # pyrefly: ignore [missing-import]
+import sqlite3
 from flask import Blueprint, request, jsonify, session
 # pyrefly: ignore [missing-import]
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -8,7 +9,7 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/api/register', methods=['POST'])
 def register():
-    data = request.json
+    data = request.json or {}
     name = data.get('name')
     email = data.get('email')
     password = data.get('password')
@@ -36,7 +37,7 @@ def register():
             "message": "User registered successfully", 
             "user": {"id": user_id, "name": name, "email": email}
         }), 201
-    except connection.IntegrityError:
+    except sqlite3.IntegrityError:
         return jsonify({"error": "Email already exists"}), 409
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -45,7 +46,7 @@ def register():
 
 @auth_bp.route('/api/login', methods=['POST'])
 def login():
-    data = request.json
+    data = request.json or {}
     email = data.get('email')
     password = data.get('password')
 

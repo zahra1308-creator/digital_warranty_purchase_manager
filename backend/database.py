@@ -1,12 +1,17 @@
 import sqlite3
 import os
-DATABASE = "database/warranty_manager.db"
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+raw_db_path = os.environ.get('DATABASE_PATH', os.path.join("database", "warranty_manager.db"))
+DATABASE = raw_db_path if os.path.isabs(raw_db_path) else os.path.normpath(os.path.join(BASE_DIR, raw_db_path))
+
 def get_db_connection():
     connection = sqlite3.connect(DATABASE)
     connection.row_factory = sqlite3.Row
     return connection
+
 def create_tables():
-    os.makedirs("database", exist_ok=True)
+    os.makedirs(os.path.dirname(DATABASE), exist_ok=True)
     connection = get_db_connection()
     cursor = connection.cursor()
     cursor.execute("""

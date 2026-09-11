@@ -16,7 +16,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await getUserProducts(currentUser.uid);
+        const data = await getUserProducts();
         setProducts(data);
         
         let active = 0, expired = 0, expiringSoon = 0;
@@ -48,7 +48,7 @@ const Dashboard = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-1">Welcome back, <span className="font-semibold text-gray-900">{currentUser?.displayName || currentUser?.email}</span>!</p>
+          <p className="text-gray-600 mt-1">Welcome back, <span className="font-semibold text-gray-900">{currentUser?.name || currentUser?.displayName || currentUser?.email}</span>!</p>
         </div>
         <Link to="/products" className="px-5 py-2.5 bg-white border border-gray-200 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors shadow-sm flex items-center gap-2">
           View All Products <FiArrowRight />
