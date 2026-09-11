@@ -24,7 +24,9 @@ const getBackendUrl = () => {
   if (import.meta.env.VITE_API_BASE_URL) {
     return import.meta.env.VITE_API_BASE_URL.replace(/\/api\/?$/, '');
   }
-  return 'http://localhost:5000';
+  return import.meta.env.PROD
+    ? 'https://digital-warranty-purchase-manager.onrender.com'
+    : 'http://localhost:5000';
 };
 
 const BACKEND_URL = getBackendUrl();

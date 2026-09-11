@@ -41,9 +41,9 @@ else:
 # Configure CORS with explicit allowed origins (supports credentials)
 raw_cors = os.environ.get('CORS_ORIGIN', 'http://localhost:5173')
 allowed_origins = [origin.strip() for origin in raw_cors.split(',') if origin.strip()]
-for dev_origin in ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3000']:
-    if dev_origin not in allowed_origins:
-        allowed_origins.append(dev_origin)
+for default_origin in ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3000', r"https://.*\.vercel\.app"]:
+    if default_origin not in allowed_origins:
+        allowed_origins.append(default_origin)
 
 CORS(app, supports_credentials=True, origins=allowed_origins)
 

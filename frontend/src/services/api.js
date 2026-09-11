@@ -1,4 +1,8 @@
-const rawBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const defaultBaseUrl = import.meta.env.PROD 
+  ? 'https://digital-warranty-purchase-manager.onrender.com/api' 
+  : 'http://localhost:5000/api';
+
+const rawBaseUrl = import.meta.env.VITE_API_BASE_URL || defaultBaseUrl;
 const BASE_URL = rawBaseUrl.replace(/\/+$/, '');
 
 // Helper for making API requests with credentials (cookies)
