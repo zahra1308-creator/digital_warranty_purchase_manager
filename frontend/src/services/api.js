@@ -1,8 +1,10 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const rawBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const BASE_URL = rawBaseUrl.replace(/\/+$/, '');
 
 // Helper for making API requests with credentials (cookies)
 const apiCall = async (endpoint, options = {}) => {
-  const url = `${BASE_URL}${endpoint}`;
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const url = `${BASE_URL}${cleanEndpoint}`;
 
   const isFormData = options.body instanceof FormData;
   const headers = {

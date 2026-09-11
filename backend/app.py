@@ -21,8 +21,31 @@ from routes.products import products_bp
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'super-secret-key-for-development')
 
-# Configure CORS to allow credentials (cookies)
-CORS(app, supports_credentials=True)
+# Environment detection
+IS_PRODUCTION = (
+    os.environ.get('FLASK_ENV') == 'production' or 
+    os.environ.get('RENDER') == 'true' or
+    os.environ.get('VERCEL') == '1'
+)
+
+# Session Cookie Security Configuration for Cross-Site Auth
+if IS_PRODUCTION:
+    app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+    app.config['SESSION_COOKIE_SECURE'] = True
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+else:
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+    app.config['SESSION_COOKIE_SECURE'] = False
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+
+# Configure CORS with explicit allowed origins (supports credentials)
+raw_cors = os.environ.get('CORS_ORIGIN', 'http://localhost:5173')
+allowed_origins = [origin.strip() for origin in raw_cors.split(',') if origin.strip()]
+for dev_origin in ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3000']:
+    if dev_origin not in allowed_origins:
+        allowed_origins.append(dev_origin)
+
+CORS(app, supports_credentials=True, origins=allowed_origins)
 
 create_tables()
 
@@ -44,7 +67,8 @@ def home():
     return "Digital Warranty & Purchase Manager API is running"
 
 if __name__ == "__main__":
-    port = int(os.environ.get('BACKEND_PORT', 5000))
-    host = os.environ.get('BACKEND_HOST', '127.0.0.1')
-    debug = os.environ.get('FLASK_DEBUG', '1') in ['1', 'True', 'true']
+    port = int(os.environ.get('PORT', os.environ.get('BACKEND_PORT', 5000)))
+    default_host = '0.0.0.0' if IS_PRODUCTION else '127.0.0.1'
+    host = os.environ.get('BACKEND_HOST', default_host)
+    debug = os.environ.get('FLASK_DEBUG', '1') in ['1', 'True', 'true'] and not IS_PRODUCTION
     app.run(host=host, port=port, debug=debug)

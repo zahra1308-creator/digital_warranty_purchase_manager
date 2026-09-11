@@ -17,7 +17,17 @@ export const addProduct = async (productData, file) => {
   });
 };
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+const getBackendUrl = () => {
+  if (import.meta.env.VITE_BACKEND_URL) {
+    return import.meta.env.VITE_BACKEND_URL.replace(/\/+$/, '');
+  }
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL.replace(/\/api\/?$/, '');
+  }
+  return 'http://localhost:5000';
+};
+
+const BACKEND_URL = getBackendUrl();
 
 const transformToCamelCase = (dbObj) => {
   let billURL = dbObj.bill_path;
